@@ -16,7 +16,10 @@ import javax.swing.tree.DefaultTreeModel;
  * @author Usuario
  */
 public class principal extends javax.swing.JFrame {
+double pesoUniverso = 0, pesoTortuga = 0, pesoCriaturas;
 
+
+    
     /**
      * Creates new form principal
      */
@@ -33,6 +36,14 @@ public class principal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jpop_tree = new javax.swing.JPopupMenu();
+        jmi_verUniverso = new javax.swing.JMenuItem();
+        jpop_Mundos = new javax.swing.JPopupMenu();
+        jmi_verPeso = new javax.swing.JMenuItem();
+        jpop_Criatura = new javax.swing.JPopupMenu();
+        jmi_verRaza = new javax.swing.JMenuItem();
+        jmi_verRegion = new javax.swing.JMenuItem();
+        jmi_verEnergia = new javax.swing.JMenuItem();
         jScrollPane1 = new javax.swing.JScrollPane();
         jl_mundos = new javax.swing.JList<>();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -54,6 +65,46 @@ public class principal extends javax.swing.JFrame {
         jb_agregarUniverso = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
 
+        jmi_verUniverso.setText("Ver datos del Universo");
+        jmi_verUniverso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_verUniversoActionPerformed(evt);
+            }
+        });
+        jpop_tree.add(jmi_verUniverso);
+
+        jmi_verPeso.setText("Ver peso del mundo");
+        jmi_verPeso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_verPesoActionPerformed(evt);
+            }
+        });
+        jpop_Mundos.add(jmi_verPeso);
+
+        jmi_verRaza.setText("Ver raza ");
+        jmi_verRaza.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_verRazaActionPerformed(evt);
+            }
+        });
+        jpop_Criatura.add(jmi_verRaza);
+
+        jmi_verRegion.setText("Ver region");
+        jmi_verRegion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_verRegionActionPerformed(evt);
+            }
+        });
+        jpop_Criatura.add(jmi_verRegion);
+
+        jmi_verEnergia.setText("Ver energia de la criatura");
+        jmi_verEnergia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_verEnergiaActionPerformed(evt);
+            }
+        });
+        jpop_Criatura.add(jmi_verEnergia);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jl_mundos.setModel(new DefaultListModel());
@@ -64,6 +115,11 @@ public class principal extends javax.swing.JFrame {
 
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Universo");
         jt_Universo.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        jt_Universo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jt_UniversoMouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(jt_Universo);
 
         jLabel1.setText("Mundos");
@@ -287,6 +343,7 @@ public class principal extends javax.swing.JFrame {
             DefaultListModel modelo = (DefaultListModel) jl_mundos.getModel();
             modelo.addElement(new MundoDisco(nombre, peso));
             jl_mundos.setModel(modelo);
+            pesoTortuga += peso;
         } else 
             JOptionPane.showMessageDialog(this, "No ha agregado ningun universo todavia. Por favor hagalo.");
        
@@ -298,8 +355,7 @@ public class principal extends javax.swing.JFrame {
         // TODO add your handling code here:
         String codigo = JOptionPane.showInputDialog("Ingrese codigo universo: ");
         int edad = Integer.parseInt(JOptionPane.showInputDialog("Ingrese edad del universo: "));
-        double peso = Double.parseDouble(JOptionPane.showInputDialog("Ingrese peso del universo: "));
-        universo.add(new Universo(codigo, edad, peso));
+        universo.add(new Universo(codigo, edad, 0));
         
     }//GEN-LAST:event_jb_agregarUniversoMouseClicked
 
@@ -323,6 +379,8 @@ public class principal extends javax.swing.JFrame {
         if (jl_mundos.getSelectedIndex() >= 0) {
             DefaultListModel modelo = (DefaultListModel) jl_mundos.getModel();
             modelo.remove(jl_mundos.getSelectedIndex()); 
+            double pesoMundo = Double.parseDouble(String.valueOf(((Universo)universo.get(0)).getMundos().get(jl_mundos.getSelectedIndex())));
+            pesoTortuga-= pesoMundo;
         }else
             JOptionPane.showMessageDialog(this, "no ha seleccionado ningun mundo que eliminar. ");
     }//GEN-LAST:event_jb_eliminarMundoMouseClicked
@@ -338,6 +396,7 @@ public class principal extends javax.swing.JFrame {
             double peso = Double.parseDouble(JOptionPane.showInputDialog("Ingrese peso de la criatura: "));
             ((Universo)universo.get(jl_mundos.getSelectedIndex())).getMundos().get(jl_mundos.getSelectedIndex()).getCriaturas().add(new Criatura(nombre, numEnergia, maxAnios, nombreRegion, cantidadVivos));
             
+            pesoCriaturas+= cantidadVivos * peso;
             //agregar al jlist
             DefaultListModel modelo = (DefaultListModel) jl_criaturas.getModel();
             modelo.addElement(new Criatura(nombre, numEnergia, maxAnios, nombreRegion, cantidadVivos));
@@ -381,6 +440,9 @@ public class principal extends javax.swing.JFrame {
         if (jl_criaturas.getSelectedIndex() >= 0) {
             DefaultListModel modelo = (DefaultListModel) jl_criaturas.getModel();
             modelo.remove(jl_criaturas.getSelectedIndex()); 
+        double cantidadVivos = ((Universo)universo.get(jl_mundos.getSelectedIndex())).getMundos().get(jl_mundos.getSelectedIndex()).getCriaturas().get(jl_mundos.getSelectedIndex()).getCantidadVivos();  
+        double peso =   ((Universo)universo.get(jl_mundos.getSelectedIndex())).getMundos().get(jl_mundos.getSelectedIndex()).getCriaturas().get(jl_mundos.getSelectedIndex()).getPesoCriatura();
+        pesoCriaturas -= cantidadVivos*peso;
         }else
             JOptionPane.showMessageDialog(this, "no ha seleccionado ninguna criatura que eliminar. ");
     }//GEN-LAST:event_jb_eliminarCriaturasMouseClicked
@@ -422,6 +484,75 @@ public class principal extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_jb_universoMouseClicked
+
+    private void jt_UniversoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_UniversoMouseClicked
+        // TODO add your handling code here:
+        if(evt.isMetaDown()){
+            int row = jt_Universo.getClosestRowForLocation(evt.getX(), evt.getY());
+            jt_Universo.setSelectionRow(row);
+            Object v1 = jt_Universo.getSelectionPath().getLastPathComponent();
+            n_sel = (DefaultMutableTreeNode) v1;
+            if(n_sel.getUserObject() instanceof String && n_sel.getUserObject().equals("Universo")){
+                jpop_tree.show(evt.getComponent(),evt.getX(),evt.getY());
+                
+            }
+            
+             if(n_sel.getUserObject() instanceof MundoDisco){
+                 m_sel = (MundoDisco) n_sel.getUserObject();
+                jpop_Mundos.show(evt.getComponent(),evt.getX(),evt.getY());
+                
+            }
+             if(n_sel.getUserObject() instanceof Criatura){
+                c_sel = (Criatura) n_sel.getUserObject();
+                jpop_Criatura.show(evt.getComponent(),evt.getX(),evt.getY());
+                
+            }
+            
+            /*
+            if(n_sel.getUserObject() instanceof String && !n_sel.getUserObject().equals("Personas")){
+                jpm_an.show(evt.getComponent(),evt.getX(),evt.getY());
+            }
+            */         
+        }
+        
+        
+    }//GEN-LAST:event_jt_UniversoMouseClicked
+
+    private void jmi_verUniversoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_verUniversoActionPerformed
+        // TODO add your handling code here:
+        pesoUniverso = pesoTortuga + pesoCriaturas;
+        JOptionPane.showMessageDialog(this, ""
+                        + "Codigo universo: " + String.valueOf(((Universo)universo.get(0)).getCodigo()) + "\n"
+                        + "Edad Universo: " + String.valueOf(((Universo)universo.get(0)).getEdad()) + "\n"
+                        + "Peso Universo: " + pesoUniverso + "\n"  );
+        
+        /*
+            Cada vez que agregaba criaturas o mundos iba sumando el peso del universo,
+        igual si se eliminaba el mundo o la criatura iba restandolo del peso total
+        al final solo sume las dos varibales pesoTortuga + pesoCriaturas para tener el 
+        peso total :)
+        */
+    }//GEN-LAST:event_jmi_verUniversoActionPerformed
+
+    private void jmi_verPesoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_verPesoActionPerformed
+        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(this, "Peso del mundo: " + m_sel.getPesoTortuga());
+    }//GEN-LAST:event_jmi_verPesoActionPerformed
+
+    private void jmi_verRazaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_verRazaActionPerformed
+        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(this, "Raza de la criatura: " + c_sel.getNombreRaza());
+    }//GEN-LAST:event_jmi_verRazaActionPerformed
+
+    private void jmi_verRegionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_verRegionActionPerformed
+        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(this, "Region de la Criatura: " + c_sel.getNombreRegion());
+    }//GEN-LAST:event_jmi_verRegionActionPerformed
+
+    private void jmi_verEnergiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_verEnergiaActionPerformed
+        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(this, "Numero de Energia de la Criatura: " + c_sel.getNumeroEnergia());
+    }//GEN-LAST:event_jmi_verEnergiaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -478,8 +609,19 @@ public class principal extends javax.swing.JFrame {
     private javax.swing.JButton jb_universo;
     private javax.swing.JList<String> jl_criaturas;
     private javax.swing.JList<String> jl_mundos;
+    private javax.swing.JMenuItem jmi_verEnergia;
+    private javax.swing.JMenuItem jmi_verPeso;
+    private javax.swing.JMenuItem jmi_verRaza;
+    private javax.swing.JMenuItem jmi_verRegion;
+    private javax.swing.JMenuItem jmi_verUniverso;
+    private javax.swing.JPopupMenu jpop_Criatura;
+    private javax.swing.JPopupMenu jpop_Mundos;
+    private javax.swing.JPopupMenu jpop_tree;
     private javax.swing.JTree jt_Universo;
     // End of variables declaration//GEN-END:variables
 ArrayList <Universo> universo = new ArrayList();
-
+private DefaultMutableTreeNode n_sel;
+private Universo u_sel;
+private MundoDisco m_sel;
+private Criatura c_sel;
 }

@@ -50,6 +50,19 @@ public class MundoDisco {
         return  nombreTortuga;
     }
     
+    public static boolean numero(String cadena) {
+        boolean resultado;
+
+        try {
+            Integer.parseInt(cadena);
+            resultado = true;
+        } catch (NumberFormatException excep) {
+            resultado = false;
+        }
+
+        return resultado;
+    }
+    
     
     
     
